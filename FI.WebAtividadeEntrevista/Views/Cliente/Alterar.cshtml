@@ -1,0 +1,21 @@
+﻿@model WebAtividadeEntrevista.Models.ClienteModel
+@{
+    ViewBag.Title = "Alterar Cliente";
+}
+@section scripts{
+    <script>
+        var urlAlterar = '@Url.Action("AlterarCliente", "Cliente")';
+        var vMethod = "PUT";
+        var obj = @Html.Raw(Json.Encode(Model));
+        console.log(obj);
+        var urlRetorno = '@Url.Action("Index", "Cliente")';
+    </script>
+    @Scripts.Render("~/bundles/altClientes")
+    @Scripts.Render("~/bundles/jquerymask")
+    @Scripts.Render("~/bundles/MaskCPF")
+    @Scripts.Render("~/bundles/Beneficiarios")
+    <script>MascaraCPF("#CPF")</script>
+
+}
+<h2>@Html.Raw(ViewBag.Title)</h2>
+@Html.Partial("Forms")

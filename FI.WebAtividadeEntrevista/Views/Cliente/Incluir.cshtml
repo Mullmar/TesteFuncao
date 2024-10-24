@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Cadastrar Cliente";
+}
+@section scripts{
+    <script>
+        var url = '@Url.Action("Incluir", "Cliente", new { area = "" })';
+        var urlRetorno = '@Url.Action("Index", "Cliente", new { area = "" })';
+    </script>
+    @Scripts.Render("~/bundles/clientes")
+    @Scripts.Render("~/bundles/altClientes")
+    @Scripts.Render("~/bundles/jquerymask")
+    @Scripts.Render("~/bundles/MaskCPF")
+    <script>MascaraCPF("#CPF")</script>
+}
+
+<h2>@Html.Raw(ViewBag.Title)</h2>
+@Html.Partial("Forms")
