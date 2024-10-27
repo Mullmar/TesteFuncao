@@ -23,7 +23,7 @@ $(document).ready(function () {
                     if (r.status == 400) {
                         document.getElementById("clienteBody").innerHTML = "";
                         document.getElementById("clienteHeader").innerHTML = "";
-                        $('#clienteBody').html("CPF já cadastrado, use outro CPF!");
+                        $('#clienteBody').html("CPF inválido, use outro CPF!");
                         $('#clienteHeader').html("Alerta!");
                         $('#clienteModal').modal('show');
                     }

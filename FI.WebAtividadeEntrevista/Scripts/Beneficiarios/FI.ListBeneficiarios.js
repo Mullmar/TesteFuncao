@@ -1,25 +1,28 @@
 ﻿function SalvarBeneficiario(data, nome, cpf, endpoint) {
-
+    console.log(data);
         var url = endpoint;
         var vMethod = "";
 
         vMethod = endpoint.includes("Inserir") ? "POST" : "PUT";
+        vId = endpoint.includes("Inserir") ? 0 : data.id;
 
         $.ajax({
             url: url,
             method: vMethod,
             contentType: "application/json",
             data: JSON.stringify({
+                Id: vId,
                 Nome: $(nome).val(),
                 CPF: $(cpf).val(),
                 IdCliente: data.IdCliente
             }),
             success:
                 function (r) {
-                    if (r.StatusCode == "400") {
+                    console.log(r);
+                    if (r.StatusCode === "400") {
                         $('#rowResult').attr("class", "alert alert-warning");
-                        $('#rowResult').html("<strong>" + "CPF já cadastrado ou inválido!" + "</strong>")
-                    } else if (r.StatusCode == "200") {
+                        $('#rowResult').html("<strong>" + "CPF já cadastrado anteriormente!" + "</strong>")
+                    } else if (r.StatusCode === "200") {
                         $('#rowResult').attr("class", "alert alert-success");
                         $('#rowResult').html("<strong>" + "Beneficiário salvo com sucesso!" + "</strong>")
                     }
@@ -30,16 +33,16 @@
                 },
             error:
                 function (r) {
-                    if (r.StatusCode == "500") {
+                    if (r.responseJSON.StatusCode === "500") {
                         $('#rowResult').attr("class", "alert alert-danger");
-                    } else if (r.StatusCode == "400") {
+                        $('#rowResult').html("<strong>" + "Ocorreu um erro no servidor!" + "</strong>")
+                    } else if (r.responseJSON.StatusCode === "400") {
                         $('#rowResult').attr("class", "alert alert-warning");
+                        $('#rowResult').html("<strong>" + "CPF inválido!" + "</strong>")
                     }
-                    $('#rowResult').html("<strong>" + "Ocorreu um erro no servidor!" + "</strong>")
-                     // Mostra e esconde a mensagem após 3 segundos
-
+                    
+                    $('#rowResult').fadeIn().delay(3000).fadeOut();
                     setTimeout(function () {
-                        $('#rowResult').fadeIn().delay(3000).fadeOut();
                         ModalBeneficiarios(data.IdCliente);
                     }, 3000);
 
@@ -52,9 +55,13 @@ function AlterarBeneficiario(data, count) {
         var div2 = "#cpfBen-" + count;
         var nome = "#inputNome-" + count;
         var cpf = "#inputCpf-" + count;
-        var alterar = "#btnAlterar-" + count;
+        var alterar = "#btnAlteration-" + count;
         $(div1).html("<input id='" + nome.replace("#", "") + "' class='form-control' type='text' maxlength='50' />");
         $(nome).val(data.nome);
+
+        console.log("div1: ", $(div1).length);
+        console.log("div2: ", $(div2).length);
+        console.log("alterar: ", $(alterar).length);
 
         $(div2).html("<input id='" + cpf.replace("#", "") + "' class='form-control' type='text' maxlength='14' />");
         $(cpf).val(data.cpf);

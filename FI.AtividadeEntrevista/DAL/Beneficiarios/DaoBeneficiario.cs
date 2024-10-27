@@ -53,11 +53,12 @@ namespace FI.AtividadeEntrevista.DAL
             return cli.FirstOrDefault();
         }
 
-        internal bool VerificarExistencia(string CPF)
+        internal bool VerificarExistencia(string CPF, long id)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", CPF));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("ID", id));
 
             DataSet ds = base.Consultar("FI_SP_VerificaCliente", parametros);
 
@@ -105,7 +106,7 @@ namespace FI.AtividadeEntrevista.DAL
         /// Inclui um novo cliente
         /// </summary>
         /// <param name="cliente">Objeto de cliente</param>
-        internal long Alterar(DML.Beneficiario beneficiario)
+        internal void Alterar(DML.Beneficiario beneficiario)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
             parametros.Add(new System.Data.SqlClient.SqlParameter("Id", beneficiario.Id));
@@ -113,11 +114,11 @@ namespace FI.AtividadeEntrevista.DAL
             parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));
             parametros.Add(new System.Data.SqlClient.SqlParameter("IDCliente", beneficiario.IdCliente));
 
-            DataSet ds = base.Consultar("FI_SP_AltBeneficiario", parametros);
-            long ret = 0;
-            if (ds.Tables[0].Rows.Count > 0)
-                long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
-            return ret;
+            base.Executar("FI_SP_AltBeneficiario", parametros);
+            //long ret = 0;
+            //if (ds.Tables[0]?.Rows.Count > 0)
+            //    long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
+            //return ret;
         }
 
 

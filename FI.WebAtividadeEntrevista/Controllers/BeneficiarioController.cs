@@ -24,39 +24,36 @@ namespace WebAtividadeEntrevista.Controllers
             ClienteBeneficiariosModel cliBenModel = new ClienteBeneficiariosModel();
             cliBenModel.Beneficiarios = new List<BeneficiarioModel>();
             BeneficiarioModel ben = null;
+            ClienteModel cli = new ClienteModel();
+            cli.Id = id;
+            cliBenModel.Cliente = cli;
 
             foreach (Beneficiario beneficiario in beneficiarios)
             {
-                ClienteModel cli = new ClienteModel();
+
                 ben = new BeneficiarioModel();
                 ben.Id = beneficiario.Id;
                 ben.Nome = beneficiario.Nome;
                 ben.CPF = beneficiario.CPF;
                 ben.IdCliente = beneficiario.IdCliente;
                 cliBenModel.Beneficiarios.Add(ben);
-                cli.Id = beneficiario.IdCliente;
-                cliBenModel.Cliente = cli;
             }
 
             return PartialView("Index", cliBenModel);
         }
         
         [HttpPut]
-        public JsonResult Alterar()
+        public JsonResult Alterar(BeneficiarioModel beneficiario)
         {
             try
             {
-                var jsonString = new StreamReader(HttpContext.Request.InputStream).ReadToEnd();
-                var beneficiario = JsonConvert.DeserializeObject<Beneficiario>(jsonString);
 
-                
-                
                 if (beneficiario == null)
                 {
                     return Json(new { Message = "Dados Inválidos", StatusCode = "400", Records = beneficiario });
                 } else
                 {
-                    beneficiario.CPF = beneficiario.CPF.Replace("-", "").Replace(".", "");
+                    beneficiario.CPF = beneficiario?.CPF?.Replace("-", "").Replace(".", "");
                 }
 
                 BoBeneficiario bo = new BoBeneficiario();
@@ -68,7 +65,7 @@ namespace WebAtividadeEntrevista.Controllers
                                           select error.ErrorMessage).ToList();
 
                     Response.StatusCode = 400;
-                    return Json(string.Join(Environment.NewLine, erros));
+                    return Json(new { Message = "CPF inválido!", StatusCode = "400" });
                 }
                 else
                 {
@@ -87,7 +84,13 @@ namespace WebAtividadeEntrevista.Controllers
                         }
                     }
                    
-                    bo.Alterar(beneficiario);
+                    Beneficiario benef = new Beneficiario();
+                    benef.CPF = beneficiario.CPF;
+                    benef.Id = beneficiario.Id;
+                    benef.Nome = beneficiario.Nome;
+                    benef.IdCliente = beneficiario.IdCliente;
+
+                    bo.Alterar(benef);
              
 
                     return Json(new { Message = "Beneficiário alterado com sucesso!", StatusCode = "200" });
@@ -130,14 +133,10 @@ namespace WebAtividadeEntrevista.Controllers
         }
 
         [HttpPost]
-        public JsonResult Inserir()
+        public JsonResult Inserir(BeneficiarioModel beneficiario)
         {
             try
             {
-                var jsonString = new StreamReader(HttpContext.Request.InputStream).ReadToEnd();
-                var beneficiario = JsonConvert.DeserializeObject<Beneficiario>(jsonString);
-
-
 
                 if (beneficiario == null)
                 {
@@ -145,7 +144,7 @@ namespace WebAtividadeEntrevista.Controllers
                 }
                 else
                 {
-                    beneficiario.CPF = beneficiario.CPF.Replace("-", "").Replace(".", "");
+                    beneficiario.CPF = beneficiario?.CPF?.Replace("-", "").Replace(".", "");
                 }
 
                 BoBeneficiario bo = new BoBeneficiario();
@@ -157,7 +156,7 @@ namespace WebAtividadeEntrevista.Controllers
                                           select error.ErrorMessage).ToList();
 
                     Response.StatusCode = 400;
-                    return Json(string.Join(Environment.NewLine, erros));
+                    return Json(new { Message = "CPF inválido!", StatusCode = "400" });
                 }
                 else
                 {
@@ -173,7 +172,12 @@ namespace WebAtividadeEntrevista.Controllers
                         }
                     }
 
-                    bo.Inserir(beneficiario);
+                    Beneficiario benef = new Beneficiario();
+                    benef.CPF = beneficiario.CPF;
+                    benef.Nome = beneficiario.Nome;
+                    benef.IdCliente = beneficiario.IdCliente;
+
+                    bo.Inserir(benef);
 
 
                     return Json(new { Message = "Beneficiário incluído com sucesso!", StatusCode = "200" });

@@ -68,7 +68,7 @@ namespace FI.AtividadeEntrevista.BLL
         {
             beneficiario.CPF = beneficiario.CPF.Replace("-", "").Replace(".", "");
             DAL.DaoBeneficiario ben = new DAL.DaoBeneficiario();
-            if(!ben.VerificarExistencia(beneficiario.CPF))
+            if(!ben.VerificarExistencia(beneficiario.CPF, beneficiario.Id))
             {
                 ben.Alterar(beneficiario);
             } 

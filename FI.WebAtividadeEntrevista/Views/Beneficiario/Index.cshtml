@@ -1,7 +1,6 @@
 ﻿@model WebAtividadeEntrevista.Models.ClienteBeneficiariosModel
 @{
     var count = 1;
-
 }
 
 <body onload="">
@@ -34,41 +33,46 @@
             </div>
         </div>
     </div>
-    @foreach (var ben in Model.Beneficiarios)
+    @if (Model.Beneficiarios != null)
     {
-        <div class="row">
-            <div class="col-sm-12">
-                <hr />
-            </div>
-        </div>
-        <div class="row" style="margin-top:5px" id="rowDados">
-            <div class="col-md-4">
-                <div class="pull-left" id="nomeBen-@count">
-                    @ben.Nome
+        foreach (var ben in Model?.Beneficiarios)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <hr />
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="pull-left" id="cpfBen-@count">
-                    @ben.CPF
+            <div class="row" style="margin-top:5px" id="rowDados">
+                <div class="col-md-4">
+                    <div class="pull-left" id="nomeBen-@count">
+                        @ben.Nome
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="pull-left" id="cpfBen-@count">
+                        @ben.CPF
+                    </div>
+                </div>
+                @{
+                    var editBenJson = new { id = ben.Id, nome = ben.Nome, cpf = ben.CPF, IdCliente = ben.IdCliente };
+                    var editBenJsonString = Html.Raw(Json.Encode(editBenJson));
+                }
+                <div class="col-md-2">
+                    <div class="pull-left">
+                        <button type="button" class="btn btn-primary" id="btnAlteration-@count" onclick='AlterarBeneficiario(@editBenJsonString, @count)'>Alterar</button>
+                    </div>
+                </div>
+                <div class="col-md-2" id="divBtnExcluir">
+                    <div class="pull-left">
+                        <button type="button" class="btn btn-danger" id="btnExcluir-@count" onclick='ExcluirBeneficiario(@editBenJsonString, @count)'>Excluir</button>
+                    </div>
                 </div>
             </div>
-            @{
-                var editBenJson = new { id = ben.Id, nome = ben.Nome, cpf = ben.CPF, IdCliente = ben.IdCliente };
-                var editBenJsonString = Html.Raw(Json.Encode(editBenJson));
-            }
-            <div class="col-md-2">
-                <div class="pull-left">
-                    <button type="button" class="btn btn-primary" id="btnAlterar-@count" onclick='AlterarBeneficiario(@editBenJsonString, @count)'>Alterar</button>
-                </div>
-            </div>
-            <div class="col-md-2" id="divBtnExcluir">
-                <div class="pull-left">
-                    <button type="button" class="btn btn-danger" id="btnExcluir-@count" onclick='ExcluirBeneficiario(@editBenJsonString, @count)'>Excluir</button>
-                </div>
-            </div>
-        </div>
-        count++;
+            count++;
+        }
+
     }
+
 
 
 
@@ -76,7 +80,6 @@
     <div class="row">
         <div class="col-sm-12">
             <div id="rowResult" class="alert alert-success" role="alert" style="display: none; margin-top:10px">
-                <b>Beneficiário salvo com sucesso!</b>
             </div>
         </div>
     </div>
